@@ -44,5 +44,26 @@ describe("Pagination", () => {
 
         //assert
         expect(prevButton).toHaveClass("disabled")
+    }) 
+    test("중간 페이지에서는 이전, 다음 페이지로 이동할 수 있다", () => {
+
+        //arrange
+        render(        
+            <Test2 
+            totalItems={9} 
+            itemsPerPage={3} 
+            pageNumberTestId={PAGE_NUMBER_TEST_ID}
+            />
+        )
+        const prevButton = screen.getByText(/previous/i)
+        const nextButton = screen.getByText(/next/i)
+
+        //act
+        fireEvent.click(nextButton)
+
+        //assert
+        expect(prevButton).not.toHaveClass("disabled")
+        expect(nextButton).not.toHaveClass("disabled")
+
     })
 })
