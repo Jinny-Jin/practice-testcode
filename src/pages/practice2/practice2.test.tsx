@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom/extend-expect'
 import Test2 from './practice2'
-import { render, screen } from '@testing-library/react'
+import { fireEvent, render, screen } from '@testing-library/react'
 
 const PAGE_NUMBER_TEST_ID = "page-number"
 
@@ -25,5 +25,24 @@ describe("Pagination", () => {
         })
         expect(prevButton).toBeInTheDocument()
         expect(nextButton).toBeInTheDocument()
+    })
+
+    test("첫 번째 페이지에서는 이전 페이지로 돌아갈 수 없음", ()=>{
+        
+        //arrange
+        render(        
+            <Test2 
+            totalItems={6} 
+            itemsPerPage={3} 
+            pageNumberTestId={PAGE_NUMBER_TEST_ID}
+            />
+        )
+        const prevButton = screen.getByText(/previous/i)
+
+        //act
+        fireEvent.click(prevButton)
+
+        //assert
+        expect(prevButton).toHaveClass("disabled")
     })
 })
