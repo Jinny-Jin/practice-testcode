@@ -66,4 +66,23 @@ describe("Pagination", () => {
         expect(nextButton).not.toHaveClass("disabled")
 
     })
+
+    test("마지막 페이지에서는 다음 버튼을 클릭했을 때 다음 페이지로 이동할 수 없음", () => {
+
+        //arrange
+        render(        
+            <Test2 
+            totalItems={6} 
+            itemsPerPage={3} 
+            pageNumberTestId={PAGE_NUMBER_TEST_ID}
+            />
+        )
+        const nextButton = screen.getByText(/next/i)
+
+        //act
+        fireEvent.click(nextButton)
+
+        //assert
+        expect(nextButton).toHaveClass("disabled")
+    })
 })
