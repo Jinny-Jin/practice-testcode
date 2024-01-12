@@ -33,6 +33,9 @@ const Test2 = ({
         return(
             <li key={num}>
                 <span
+                onClick={() => {
+                    handleClick(num)
+                }}
                 data-testid={pageNumberTestId}
                 className={currentPage === num ? "active" : undefined}
                 >

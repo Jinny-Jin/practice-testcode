@@ -72,4 +72,16 @@ describe("Pagination", () => {
         //assert
         expect(nextButton).toHaveClass("disabled")
     })
+    test("페이지네이션 숫자를 누르면 해당 숫자 페이지로 이동", () => {
+
+        //arrange
+        renderPageNumbers()
+        const pageNumbers = screen.getAllByTestId(PAGE_NUMBER_TEST_ID)
+
+        //act
+        fireEvent.click(pageNumbers[1])
+
+        //assert
+        expect(pageNumbers[1]).toHaveClass("active")
+    })
 })
