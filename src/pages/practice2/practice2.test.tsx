@@ -4,19 +4,28 @@ import { fireEvent, render, screen } from '@testing-library/react'
 
 const PAGE_NUMBER_TEST_ID = "page-number"
 
-describe("Pagination", () => {
-    test("Pagination 컴포넌트 렌더링", () => {
-
-        //arrange
-        render(
+const renderPageNumbers = (totalItem? : number) => {
+    render(
         <Test2 
-        totalItems={6} 
+        totalItems={totalItem ?? 6} 
         itemsPerPage={3} 
         pageNumberTestId={PAGE_NUMBER_TEST_ID}
         />
         );
         const prevButton = screen.getByText(/previous/i)
         const nextButton = screen.getByText(/next/i)
+
+        return {
+            prevButton,
+            nextButton
+        }
+}
+
+describe("Pagination", () => {
+    test("Pagination 컴포넌트 렌더링", () => {
+
+        //arrange
+        const {prevButton, nextButton} = renderPageNumbers()
         const pageNumbers = screen.getAllByTestId(PAGE_NUMBER_TEST_ID)
 
         //assert
@@ -30,14 +39,7 @@ describe("Pagination", () => {
     test("첫 번째 페이지에서는 이전 페이지로 돌아갈 수 없음", ()=>{
         
         //arrange
-        render(        
-            <Test2 
-            totalItems={6} 
-            itemsPerPage={3} 
-            pageNumberTestId={PAGE_NUMBER_TEST_ID}
-            />
-        )
-        const prevButton = screen.getByText(/previous/i)
+        const {prevButton} = renderPageNumbers()
 
         //act
         fireEvent.click(prevButton)
@@ -48,15 +50,7 @@ describe("Pagination", () => {
     test("중간 페이지에서는 이전, 다음 페이지로 이동할 수 있다", () => {
 
         //arrange
-        render(        
-            <Test2 
-            totalItems={9} 
-            itemsPerPage={3} 
-            pageNumberTestId={PAGE_NUMBER_TEST_ID}
-            />
-        )
-        const prevButton = screen.getByText(/previous/i)
-        const nextButton = screen.getByText(/next/i)
+        const {prevButton, nextButton} = renderPageNumbers(9)
 
         //act
         fireEvent.click(nextButton)
@@ -70,14 +64,7 @@ describe("Pagination", () => {
     test("마지막 페이지에서는 다음 버튼을 클릭했을 때 다음 페이지로 이동할 수 없음", () => {
 
         //arrange
-        render(        
-            <Test2 
-            totalItems={6} 
-            itemsPerPage={3} 
-            pageNumberTestId={PAGE_NUMBER_TEST_ID}
-            />
-        )
-        const nextButton = screen.getByText(/next/i)
+        const {nextButton} = renderPageNumbers()
 
         //act
         fireEvent.click(nextButton)
