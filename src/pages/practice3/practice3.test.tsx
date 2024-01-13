@@ -2,6 +2,7 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import Test3 from './practice3';
 import "@testing-library/jest-dom/extend-expect"
 import { check } from 'ts-toolbelt/out/Test';
+import exp from 'constants';
 
 describe("Test3", ()=> {
     test("Label과 Input 그리고 버튼이 제대로 렌더링 되어야 함", ()=> {
@@ -38,11 +39,19 @@ describe("Test3", ()=> {
         expect(alertMock).toHaveBeenCalledWith("name: Jin")
 
     })
-    test.skip("약관에 동의하지 않으면 alert 창이 출력되지 말아야 함",()=>{
+    test("약관에 동의하지 않으면 alert 창이 출력되지 말아야 함",()=>{
         //arrange
+        const alertMock = jest.fn()
+        window.alert = alertMock
+
+        render(<Test3/>)
+        const button = screen.getByRole("button")
 
         //act
+        fireEvent.click(button)
 
         //assert
+        expect(alertMock).not.toHaveBeenCalled()
+        
     })
 })
