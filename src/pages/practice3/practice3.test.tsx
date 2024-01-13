@@ -1,17 +1,21 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import Test3 from './practice3';
 import "@testing-library/jest-dom/extend-expect"
-import { check } from 'ts-toolbelt/out/Test';
-import exp from 'constants';
+
+const renderTest3Page = () => {
+    render(<Test3/>)
+    const nameLabel = screen.getByText(/이름/i)
+    const nameInput = screen.getByRole("textbox")
+    const checkbox = screen.getByRole("checkbox")
+    const button = screen.getByRole("button")
+
+    return {nameLabel, nameInput, checkbox, button}
+}
 
 describe("Test3", ()=> {
     test("Label과 Input 그리고 버튼이 제대로 렌더링 되어야 함", ()=> {
         //arrange
-        render(<Test3/>)
-        const nameLabel = screen.getByText(/이름/i)
-        const nameInput = screen.getByRole("textbox")
-        const checkbox = screen.getByRole("checkbox")
-        const button = screen.getByRole("button")
+        const {nameLabel, nameInput, checkbox, button} = renderTest3Page()
 
         //assert
         expect(nameLabel).toBeInTheDocument()
@@ -24,11 +28,7 @@ describe("Test3", ()=> {
         //arrange
         const alertMock = jest.fn()
         window.alert = alertMock
-
-        render(<Test3/>)
-        const nameInput = screen.getByRole("textbox")
-        const checkbox = screen.getByRole("checkbox")
-        const button = screen.getByRole("button")
+        const {nameInput, checkbox, button} = renderTest3Page()
 
         //act
         fireEvent.change(nameInput, {target : {value : "Jin"}})
@@ -43,15 +43,13 @@ describe("Test3", ()=> {
         //arrange
         const alertMock = jest.fn()
         window.alert = alertMock
-
-        render(<Test3/>)
-        const button = screen.getByRole("button")
+        const {button} = renderTest3Page()
 
         //act
         fireEvent.click(button)
 
         //assert
         expect(alertMock).not.toHaveBeenCalled()
-        
+
     })
 })
