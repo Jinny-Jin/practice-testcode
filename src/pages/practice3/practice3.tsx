@@ -1,13 +1,36 @@
-import { useState } from 'react'
+import { useReducer } from 'react'
 import Form from './component/Form'
 import CheckboxField from './component/CheckboxField'
 import TextField from './component/TextField'
+import { createContext } from 'vm'
 
+export interface Info {
+    name : string,
+    confirm : boolean
+}
+
+const defaultInfo = {
+    name : "",
+    confirm : false
+}
+
+type PartialInfo = {name : string} | {confirm : boolean}
+
+export const InfoContext = createContext<{
+    value: Info;
+    setValue: (v: PartialInfo) => void;
+  }>({
+    value: defaultInfo,
+    setValue: (v) => {},
+  });
+  
 const Test3 = () => {
-    const [info, setInfo] = useState({
-        name : "",
-        confirm : false
-    })
+    const [info, setInfo] = useReducer((prevInfo: Info, partialInfo : any)=>{
+        return {
+            ...prevInfo, 
+            ...partialInfo
+        }
+    },defaultInfo)
 
     const onSubmit = () => {
         if(info.confirm){
@@ -16,18 +39,18 @@ const Test3 = () => {
     }
 
     return (
+        <InfoContext.Provider value={{value : info, setValue : setInfo}}>
         <Form onSubmit={onSubmit}>
             <TextField
-                value={info.name}
-                setValue={(v)=> setInfo({...info, name :v})}
+                source='name'
                 label='이름'
             />
-                <CheckboxField
-                    value={info.confirm}
-                    setValue={(v)=>setInfo({...info, confirm:v})}
-                    label='위 내용이 제출됩니다 동의하십니까?'
-                />
+            <CheckboxField
+                source='confirm'
+                label='위 내용이 제출됩니다 동의하십니까?'
+            />
         </Form>
+        </InfoContext.Provider>
         )
 }
 

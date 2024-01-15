@@ -1,16 +1,18 @@
-import { FC } from 'react'
+import { FC, useContext } from 'react'
+import { Info, InfoContext } from '../practice3'
 
 const CheckboxField : FC<{
-    value : boolean
-    setValue : (v:boolean) => void
+    source : keyof Omit<Info, "name">
     label : string
-}> = ({label, value, setValue}) => {
+}> = ({label, source}) => {
+    const {value, setValue} = useContext(InfoContext)
+
     return(
         <>
             {label}
             <input
-            onChange={(e)=> setValue(e.target.checked)}
-            value={value.toString()}
+            onChange={(e)=> setValue({ [source] : e.target.checked})}
+            value={value[source].toString()}
             type={"checkbox"}
             />
         </>

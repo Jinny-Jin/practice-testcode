@@ -1,16 +1,18 @@
-import { FC } from 'react'
+import { FC, useContext } from 'react'
+import { Info, InfoContext } from '../practice3'
 
 const TextField : FC<{
-    value : string
-    setValue : (v:string) => void
+    source : keyof Omit<Info, "confirm">
     label : string
-}>= ({value, setValue, label}) => {
+}>= ({ label, source}) => {
+    const {value, setValue} = useContext(InfoContext)
+
     return(
         <>
             {label}
             <input
-            onChange={(e)=>setValue(e.target.value)}
-            value={value}
+            onChange={(e)=>setValue({ [source] : e.target.value})}
+            value={value[source].toString()}
             />
         </>
     )
