@@ -1,8 +1,7 @@
-import { useReducer } from 'react'
+import { useReducer, createContext } from 'react'
 import Form from './component/Form'
 import CheckboxField from './component/CheckboxField'
 import TextField from './component/TextField'
-import { createContext } from 'vm'
 
 export interface Info {
     name : string,
@@ -14,7 +13,7 @@ const defaultInfo = {
     confirm : false
 }
 
-type PartialInfo = {name : string} | {confirm : boolean}
+type PartialInfo = {[key in keyof Info] : Record<key, Info[key]>}[keyof Info]
 
 export const InfoContext = createContext<{
     value: Info;

@@ -1,8 +1,12 @@
 import { FC, useContext } from 'react'
 import { Info, InfoContext } from '../practice3'
 
+type BooleanKeys = {
+    [key in keyof Info] : Info[key] extends boolean ? key : never
+}[keyof Info]
+
 const CheckboxField : FC<{
-    source : keyof Omit<Info, "name">
+    source : BooleanKeys
     label : string
 }> = ({label, source}) => {
     const {value, setValue} = useContext(InfoContext)
