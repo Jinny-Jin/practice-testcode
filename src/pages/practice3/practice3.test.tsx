@@ -127,4 +127,18 @@ describe("Test3", ()=> {
         expect(screen.getByText("반드시 체크해주세요")).toBeInTheDocument()
 
     })
+    test("에러가 있는 경우 제출 버튼 클릭이 안 됨", () => {
+        //arrange
+        const alertMock = jest.fn()
+        window.alert = alertMock
+        const {nameInput, button} = renderTest3Page()
+
+        //act
+        fireEvent.change(nameInput, {target : {value : "J"}})
+        fireEvent.click(button)
+
+        //assert
+        expect(alertMock).not.toHaveBeenCalled()
+
+    })
 })
