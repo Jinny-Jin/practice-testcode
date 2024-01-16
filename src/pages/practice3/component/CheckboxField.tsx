@@ -1,5 +1,6 @@
-import { FC, useContext, useEffect, useState } from 'react'
-import { Info, InfoContext } from '../practice3'
+import { FC } from 'react'
+import { Info } from '../practice3'
+import { useInput } from '../../../hooks/useInput'
 
 type BooleanKeys = {
     [key in keyof Info] : Info[key] extends boolean ? key : never
@@ -10,26 +11,14 @@ const CheckboxField : FC<{
     label : string
     validate : any
 }> = ({label, source, validate}) => {
-    const {value, setValue} = useContext(InfoContext)
-    const [error, setError] = useState<string>()
-
-    useEffect(()=>{
-        const errors : (string | undefined)[] = validate.map((func : any) => {
-            if(value[source] !== undefined){
-               return func(value[source])
-            }
-       })
-        const err = errors.find(err=>err)
-     
-       setError(err)
-    },[value[source]])
+    const {error, value, onChange} = useInput({source, validate})
 
     return(
         <>
             {label}
             <input
-            onChange={(e)=> setValue({ [source] : e.target.checked})}
-            value={value[source].toString()}
+            onChange={(e)=> onChange(e.target.checked)}
+            value={value.toString()}
             type={"checkbox"}
             />
             {error &&

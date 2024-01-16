@@ -116,8 +116,11 @@ describe("Test3", ()=> {
     })
     test("약관에 동의하지 않으면 에러가 출력되어야 함",()=>{
         //arrange
+        const {checkbox} = renderTest3Page()
 
         //act
+        fireEvent.click(checkbox)
+        fireEvent.click(checkbox)
 
         //assert
         expect(screen.getByText("반드시 체크해주세요")).toBeInTheDocument()

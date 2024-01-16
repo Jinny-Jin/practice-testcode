@@ -1,5 +1,6 @@
-import { FC, useContext, useEffect, useState } from 'react'
-import { Info, InfoContext, PartialInfo } from '../practice3'
+import { FC } from 'react'
+import { Info } from '../practice3'
+import { useInput } from '../../../hooks/useInput'
 
 type StringKeys = {
     [key in keyof Info] : Info[key] extends string ? key : never
@@ -10,26 +11,15 @@ const TextField : FC<{
     label : string
     validate : any
 }>= ({ label, source, validate}) => {
-    const {value, setValue} = useContext(InfoContext)
-    const [error, setError] = useState<string>()
-
-    useEffect(()=>{
-     const errors : (string | undefined)[] = validate.map((func:any)=>{
-        if(value[source]){
-           return func(value[source])
-        }
-      })  
-      const err = errors.find(error => error)
-      setError(err)
-    },[value[source]])
+    const {error, value, onChange} = useInput({source, validate})
 
     return(
         <>
             {label}
             <input
             data-testid={source}
-            onChange={(e)=>setValue({ [source] : e.target.value} as PartialInfo)}
-            value={value[source].toString()}
+            onChange={(e)=> onChange(e.target.value)}
+            value={value.toString()}
             />
             {error && 
             <p style={{color: "crimson"}}>
