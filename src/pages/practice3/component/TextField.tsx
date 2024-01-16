@@ -27,6 +27,7 @@ const TextField : FC<{
         <>
             {label}
             <input
+            data-testid={source}
             onChange={(e)=>setValue({ [source] : e.target.value} as PartialInfo)}
             value={value[source].toString()}
             />

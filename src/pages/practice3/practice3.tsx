@@ -46,7 +46,7 @@ const Test3 = () => {
             <TextField
                 source='name'
                 label='이름'
-                validate = {[minLength(2),maxLength(6)]}
+                validate = {[minLength(3),maxLength(6)]}
             />
             <TextField
                 source='password'
