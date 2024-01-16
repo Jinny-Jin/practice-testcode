@@ -1,6 +1,6 @@
 import { FC } from 'react'
-import { Info } from '../practice3'
 import { useInput } from '../../../hooks/useInput'
+import { Info } from '../../../types/Info'
 
 type StringKeys = {
     [key in keyof Info] : Info[key] extends string ? key : never

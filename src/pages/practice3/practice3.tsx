@@ -1,14 +1,9 @@
-import { useReducer, createContext } from 'react'
+import { useReducer, createContext, useState } from 'react'
 import Form from './component/Form'
 import CheckboxField from './component/CheckboxField'
 import TextField from './component/TextField'
-import { checked, maxLength, minLength } from './validation'
-
-export interface Info {
-    name : string,
-    password : string,
-    confirm : boolean
-}
+import { checked, maxLength, minLength } from './validation/validation'
+import { Info, PartialInfo } from '../../types/Info'
 
 const defaultInfo = {
     name : "",
@@ -16,32 +11,45 @@ const defaultInfo = {
     confirm : false
 }
 
-export type PartialInfo = {[key in keyof Info] : Record<key, Info[key]>}[keyof Info]
+type ErrorInfo = {[key in keyof Info] : string | undefined}
+
+export type PartialErrorInfo = {[key in keyof ErrorInfo] : Record<key, ErrorInfo[key]>}[keyof ErrorInfo]
+
+const defaultErrorInfo = Object.keys(defaultInfo).reduce((acc,key)=>{
+    acc[key as keyof ErrorInfo] = undefined
+    return acc
+}, {} as ErrorInfo)
 
 export const InfoContext = createContext<{
     value: Info;
     setValue: (v: PartialInfo) => void;
+    error : ErrorInfo;
+    setError : (e : PartialErrorInfo) => void
   }>({
     value: defaultInfo,
     setValue: (v) => {},
+    error : defaultErrorInfo,
+    setError : (e) => {}
   });
   
 const Test3 = () => {
-    const [info, setInfo] = useReducer((prevInfo: Info, partialInfo : any)=>{
+    const [info, setInfo] = useReducer((prevInfo: Info, partialInfo : PartialInfo)=>{
         return {
             ...prevInfo, 
             ...partialInfo
         }
     },defaultInfo)
+    const [error, setError] = useState<ErrorInfo>(defaultErrorInfo)
+
 
     const onSubmit = () => {
-        if(info.confirm){
-            alert(`name: ${info.name}`)
+        if(Object.values(error).every(e => e === undefined)){
+            alert(`name: ${info.name}, password: ${info.password}`)
         }
     }
 
     return (
-        <InfoContext.Provider value={{value : info, setValue : setInfo}}>
+        <InfoContext.Provider value={{value : info, setValue : setInfo, error, setError : (e) => setError(prev => ({...prev, ...e}))}}>
         <Form onSubmit={onSubmit}>
             <TextField
                 source='name'

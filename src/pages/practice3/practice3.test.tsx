@@ -30,19 +30,20 @@ describe("Test3", ()=> {
         expect(button).toBeInTheDocument()
 
     })
-    test("이름을 입력하고 약관에 동의한 다음 버튼을 클릭하면 alert 창으로 입력한 값이 출력되어야 함",()=>{
+    test("이름과 비밀번호를 입력하고 약관에 동의한 다음 버튼을 클릭하면 alert 창으로 입력한 값이 출력되어야 함",()=>{
         //arrange
         const alertMock = jest.fn()
         window.alert = alertMock
-        const {nameInput, checkbox, button} = renderTest3Page()
+        const {nameInput, passwordInput,checkbox, button} = renderTest3Page()
 
         //act
         fireEvent.change(nameInput, {target : {value : "Jin"}})
+        fireEvent.change(passwordInput, {target : {value : "1234567"}})
         fireEvent.click(checkbox)
         fireEvent.click(button)
 
         //assert
-        expect(alertMock).toHaveBeenCalledWith("name: Jin")
+        expect(alertMock).toHaveBeenCalledWith("name: Jin, password: 1234567")
 
     })
     test("약관에 동의하지 않으면 alert 창이 출력되지 말아야 함",()=>{

@@ -1,5 +1,6 @@
-import { useContext, useEffect, useState } from 'react'
-import { Info, InfoContext, PartialInfo } from '../pages/practice3/practice3'
+import { useContext, useEffect } from 'react'
+import { InfoContext, PartialErrorInfo } from '../pages/practice3/practice3'
+import { Info, PartialInfo } from '../types/Info'
 
 export const useInput = ({
     source, validate
@@ -7,8 +8,7 @@ export const useInput = ({
     source : keyof Info,
     validate : any,
 }) => {
-    const {value, setValue} = useContext(InfoContext)
-    const [error, setError] = useState<string>()
+    const {value, setValue, error, setError} = useContext(InfoContext)
 
 
     useEffect(()=>{
@@ -18,13 +18,13 @@ export const useInput = ({
            }
          })  
          const err = errors.find(error => error)
-         setError(err)
+         setError({[source] : err} as PartialErrorInfo)
        },[value[source]])
 
        const onChange = (v:any) => {
         setValue({[source] : v} as PartialInfo)
        }
    
-       return {error, value: value[source], onChange}
+       return {error : error[source], value: value[source], onChange}
 
 }
