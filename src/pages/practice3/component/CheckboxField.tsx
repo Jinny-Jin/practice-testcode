@@ -1,4 +1,4 @@
-import { FC, useContext } from 'react'
+import { FC, useContext, useEffect, useState } from 'react'
 import { Info, InfoContext } from '../practice3'
 
 type BooleanKeys = {
@@ -8,8 +8,21 @@ type BooleanKeys = {
 const CheckboxField : FC<{
     source : BooleanKeys
     label : string
-}> = ({label, source}) => {
+    validate : any
+}> = ({label, source, validate}) => {
     const {value, setValue} = useContext(InfoContext)
+    const [error, setError] = useState<string>()
+
+    useEffect(()=>{
+        const errors : (string | undefined)[] = validate.map((func : any) => {
+            if(value[source] !== undefined){
+               return func(value[source])
+            }
+       })
+        const err = errors.find(err=>err)
+     
+       setError(err)
+    },[value[source]])
 
     return(
         <>
@@ -19,6 +32,9 @@ const CheckboxField : FC<{
             value={value[source].toString()}
             type={"checkbox"}
             />
+            {error &&
+            <p style={{color:"crimson"}}>{error}</p>
+            }
         </>
     )
 }
